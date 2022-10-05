@@ -1,4 +1,4 @@
-# TP-Sistema-Distribuidos
+# TP-Sistemas-Distribuidos
 
 #Integrantes:
 - Imanol vazquez

@@ -1,5 +1,11 @@
 # TP-Sistema-Distribuidos
 
+#Integrantes:
+-Imanol vazquez
+-Noelia Echeverria
+-Camila Ezama
+-Francisco Stimmler
+
 ![image](https://user-images.githubusercontent.com/43814714/194168528-cb370a9e-3581-4702-a596-eb1ad92c5249.png)
 
 

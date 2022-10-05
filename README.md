@@ -1,10 +1,10 @@
 # TP-Sistemas-Distribuidos
 
 #Integrantes:
-- Imanol Vázquez
 - Noelia Echeverria
 - Camila Ezama
 - Francisco Stimmler
+- Imanol Vázquez
 
 Hitos:
 

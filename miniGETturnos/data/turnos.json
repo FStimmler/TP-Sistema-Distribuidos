@@ -1,0 +1,17 @@
+[
+    {
+    "id": 1, 
+    "datetime": "2022-09-02T19:58:10.406Z",
+    "userId": 2, 
+    "email": "email@gmail.com", 
+    "branchId": 3 
+    },
+    {
+        "id": 2, 
+        "datetime": "2022-09-03T19:58:10.406Z",
+        "userId": 4, 
+        "email": "email2@gmail.com", 
+        "branchId": 1
+    }
+]
+    

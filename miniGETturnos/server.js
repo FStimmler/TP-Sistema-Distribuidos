@@ -1,14 +1,15 @@
 const http = require('http')
 const Turnos = require('./model/turnosModel')
-
+const { getPostData } = require('./utils')
 
 const server = http.createServer((req, res) => {
 
     if (req.url === '/api/turnos' && req.method === 'GET') {
-      getTurnos(req, res);
+        getTurnos(req, res);
     }
-    else if(req.url === '/api/turnos' && req.method === 'POST'){
-        createTurno(req,res)
+    else if (req.url === '/api/turnos' && req.method === 'POST') {
+
+        createTurno(req, res)
     }
 
 });
@@ -40,18 +41,22 @@ async function getTurnos(req, res) {
 }
 
 // @desc    Create a Turno
-// @route   PUT /api/turnos
+// @route   POST /api/turnos
 async function createTurno(req, res) {
     try {
+
+        const body = await getPostData(req);
+
+        const { fecha, userid, email, branchId } = JSON.parse(body);
+
         const turno = {
-            id: 7, 
-            datetime: "2022-09-03T19:58:10.406Z",
-            userId: 4, 
-            email: "email2@gmail.com", 
-            branchId: 2
+            fecha,
+            userid,
+            email,
+            branchId
         }
 
-        const newTurno = await Turnos.create(turno)
+        const newTurno = Turnos.create(turno)
 
         const headers = {
             'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
@@ -61,7 +66,10 @@ async function createTurno(req, res) {
         }
         res.writeHead(201, headers);
         return res.end(JSON.stringify(newTurno))
+
+
     } catch (error) {
         console.log(error)
     }
+
 }

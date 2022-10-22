@@ -16,22 +16,30 @@ function create(turno){
             if (err) throw err;
             
         
-            const map = new Map(Object.entries(JSON.parse(data)));
+            //const map = new Map(Object.entries(JSON.parse(data)));
         
             //var ultturno = map.get((map.size-1).toString());
 
             
 
-            const id3 = map.filter(turno => {        
-                return true;
+            const mapa = Object.entries(JSON.parse(data)).map(function(element){
+                return element;
+            });        
+        
+            //console.log(mapa);           
+            
+            let algunos = mapa.filter(turno => {        
+                return turno[1]["id"]==3;
             }).map(turno => {
                 return turno;
-            });
+            });             
+            
+            console.log(algunos);
 
             // map.filter((userId) => userId == turno.userId)
 
             console.log("*************************************")
-            console.log(id3);
+            //console.log(id3);
 
             
             //console.log(ultturno["userId"])
@@ -57,19 +65,7 @@ function create(turno){
             //     };
             // }
 
-            // const mapa = Object.entries(JSON.parse(data)).map(function(element){
-            //     return element;
-            // });        
-        
-            //console.log(mapa);           
-            
-            // let algunos = mapa.filter(turno => {        
-            //     return turno[1]["id"]==1;
-            // }).map(turno => {
-            //     return turno;
-            // });             
-            
-            // console.log(algunos);
+    
         
             //turnos.push(turno);
         

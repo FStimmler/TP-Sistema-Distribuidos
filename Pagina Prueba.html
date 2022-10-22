@@ -1,9 +1,61 @@
+<form id="form">
+    <label for="fecha">Fecha</label>
+    <input type="date" id="start" name="fecha" min="2018-01-01">
+
+    <p><label for="userid">UserId</label>
+        <input type="number" name="userid" id="userid" />
+    </p>
+
+    <p><label for="email">Email</label>
+        <input type="email" name="email" id="email" />
+    </p>
+
+    <p><label for="branchId">branchId</label>
+        <input type="number" name="branchId" id="branchId" />
+    </p>
+
+    <div><button type="submit">Submit</button></div>
+</form>
+
+
 <script>
-    fetch("http://localhost:5000/api/turnos")
-        .then(function (response) {
-            return response.json();
+    function getTurnos() {
+        fetch("http://localhost:5000/api/turnos")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (jsonResponse) {
+                console.log(jsonResponse);
+            });
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        const myFormData = new FormData(event.target);
+        console.log(myFormData);
+        // Convert formData object to URL-encoded string:
+        const formDataObj = {};
+        myFormData.forEach((value, key) => (formDataObj[key] = value));
+        //  console.log({ value });
+        console.log(formDataObj);
+
+        enviar(JSON.stringify(formDataObj));
+    }
+
+
+
+    function enviar(value) {
+        fetch('http://localhost:5000/api/turnos', {
+            method: 'POST',
+            body: value,
         })
-        .then(function (jsonResponse) {
-            console.log(jsonResponse);
-        });
+            .then(res => res.json())
+            .then(data => console.log(data))
+
+    }
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', handleSubmit);
+
 </script>

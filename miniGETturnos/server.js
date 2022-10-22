@@ -40,7 +40,7 @@ async function getTurnos(req, res) {
 }
 
 // @desc    Create a Turno
-// @route   POST /api/turnos
+// @route   PUT /api/turnos
 async function createTurno(req, res) {
     try {
         const turno = {

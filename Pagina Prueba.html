@@ -1,17 +1,17 @@
 <form id="form">
     <label for="fecha">Fecha</label>
-    <input type="date" id="start" name="fecha" min="2018-01-01">
+    <input type="date" id="fecha" name="fecha" min="2018-01-01">
 
-    <p><label for="userid">UserId</label>
-        <input type="number" name="userid" id="userid" />
-    </p>
+    <label for="hora">Hora</label>
+    <select id="hora">        
+    </select>
 
     <p><label for="email">Email</label>
         <input type="email" name="email" id="email" />
     </p>
 
     <p><label for="branchId">branchId</label>
-        <input type="number" name="branchId" id="branchId" />
+        <input type="number" name="branchId_s" id="branchId" />
     </p>
 
     <div><button type="submit">Submit</button></div>
@@ -19,6 +19,51 @@
 
 
 <script>
+
+let optionList = document.getElementById('hora').options;
+let options = [
+  {
+    text: '15:00',
+    value: '15:00'
+  },
+  {
+    text: '15:30',
+    value: '15:30',
+  },
+  {
+    text: '16:00',
+    value: '16:00'
+  },
+  {
+    text: '16:30',
+    value: '16:30',
+  },
+  {
+    text: '17:00',
+    value: '17:00'
+  },
+  {
+    text: '17:30',
+    value: '17:30',
+  },
+  {
+    text: '18:00',
+    value: '18:00'
+  },
+  {
+    text: '18:30',
+    value: '18:30',
+  },
+
+];
+
+options.forEach(option =>
+  optionList.add(
+    new Option(option.text, option.value, option.selected)
+  )
+);
+
+
     function getTurnos() {
         fetch("http://localhost:5000/api/turnos")
             .then(function (response) {
@@ -32,12 +77,16 @@
     function handleSubmit(event) {
         event.preventDefault();
 
+        arrayfecha = document.getElementById('fecha').value.split("-");
+       
+        arrayhora = document.getElementById('hora').value.split(":");
+
+        fechautc=new Date(Date.UTC(arrayfecha[0],arrayfecha[1]-1,arrayfecha[2],arrayhora[0],arrayhora[1]));
+
         const myFormData = new FormData(event.target);
-        console.log(myFormData);
-        // Convert formData object to URL-encoded string:
         const formDataObj = {};
         myFormData.forEach((value, key) => (formDataObj[key] = value));
-        //  console.log({ value });
+        formDataObj['fecha']=fechautc;
         console.log(formDataObj);
 
         enviar(JSON.stringify(formDataObj));
@@ -46,12 +95,15 @@
 
 
     function enviar(value) {
+        var response
         fetch('http://localhost:5000/api/turnos', {
             method: 'POST',
             body: value,
         })
-            .then(res => res.json())
-            .then(data => console.log(data))
+            .then(res => response = res )
+            .then(data =>{ if(response.status==406) window.alert("ERROR: Turno ocupado")
+                 console.log(response.status)})
+            
 
     }
 

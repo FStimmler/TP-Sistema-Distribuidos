@@ -1,8 +1,6 @@
 const turnos = require('../data/turnos')
 const filemanagement = require('../utils')
 const fs = require('fs')
-const { Console } = require('console')
-
 function findAll() {
     return new Promise((resolve, reject) => {
         resolve(turnos)
@@ -25,59 +23,29 @@ function create(turno){
             const mapa = Object.entries(JSON.parse(data)).map(function(element){
                 return element;
             });        
-        
-            //console.log(mapa);           
             
-            let algunos = mapa.filter(turno => {        
-                return turno[1]["id"]==3;
-            }).map(turno => {
-                return turno;
+            let algunos = mapa.filter(turnoB => {        
+                return turnoB[1]["userid"]==turno.userid && turnoB[1]["fecha"]==turno.fecha && turnoB[1]["branchId"]==turno.branchId;
+            }).map(turnoB => {
+                return turnoB;
             });             
-            
+            console.log('----------------------------');
             console.log(algunos);
+            console.log(algunos.length)
 
-            // map.filter((userId) => userId == turno.userId)
-
-            console.log("*************************************")
-            //console.log(id3);
-
+            if(algunos.length==0){
+            const newTurno = turno
+            turnos.push(newTurno)
             
-            //console.log(ultturno["userId"])
-            // console.log(ultturno);
-            //console.log(ultturno["id"]-1);
-        
-            // if (ultturno != null){
-            //     var turno = {
-            //         id: ultturno["id"]+1,
-            //         datetime: '2022-09-02T19:58:10.406Z',
-            //         userId: ultturno["userId"]+1,
-            //         email: 'email@gmail.com',
-            //         branchId: 4
-            //     };
-        
-            // } else{
-            //     var turno = {
-            //         id: 1,
-            //         datetime: '2022-09-02T19:58:10.406Z',
-            //         userId: 3,
-            //         email: 'email@gmail.com',
-            //         branchId: 4
-            //     };
-            // }
+            filemanagement.writeDataToFile('./data/turnos.json', turnos)
+            resolve(newTurno) 
+            }else{
+                reject(new Error('Turno Ocupado'));
+            }
 
-    
-        
-            //turnos.push(turno);
-        
-        
-                // fs.writeFile("turnos.json", JSON.stringify(turnos), err => {
-        
-                // if (err) throw err; 
-        
-                // console.log(turnos);
-                // });
         });
-        resolve();
+            
+       
     })
 }
 

@@ -1,6 +1,13 @@
 const http = require('http')
 const Turnos = require('./model/turnosModel')
 const { getPostData } = require('./utils')
+const { hashCode } =require('./utils')
+
+const headers = {
+    'Access-Control-Allow-Origin': '*', 
+    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+    'Content-Type': 'application/json'
+}
 
 const server = http.createServer((req, res) => {
 
@@ -46,7 +53,13 @@ async function createTurno(req, res) {
 
         const body = await getPostData(req);
 
-        const { fecha, userid, email, branchId } = JSON.parse(body);
+        const { fecha, email, branchId_s } = JSON.parse(body);
+
+      
+        userid=hashCode(email);
+        branchId = parseInt(branchId_s);
+
+
 
         const turno = {
             fecha,
@@ -55,16 +68,18 @@ async function createTurno(req, res) {
             branchId
         }
 
-        const newTurno = Turnos.create(turno)
+        const newTurno = Turnos.create(turno).then( ()=>{
+            res.writeHead(201, headers);
+            return res.end(JSON.stringify(newTurno));
 
-        const headers = {
-            'Access-Control-Allow-Origin': '*', 
-            'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
-            'Access-Control-Max-Age': 2592000, 
-            'Content-Type': 'application/json'
-        }
-        res.writeHead(201, headers);
-        return res.end(JSON.stringify(newTurno))
+        },(error)=>{
+           
+            res.writeHead(406,headers);
+            res.end(error.toString());
+        } )
+
+
+        
 
 
     } catch (error) {

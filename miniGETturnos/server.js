@@ -28,9 +28,8 @@ async function getTurnos(req, res) {
         const turnos = await Turnos.findAll()
 
         const headers = {
-            'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
+            'Access-Control-Allow-Origin': '*', 
             'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
-            'Access-Control-Max-Age': 2592000, // 30 days
             'Content-Type': 'application/json'
         }
         res.writeHead(200, headers);
@@ -59,9 +58,9 @@ async function createTurno(req, res) {
         const newTurno = Turnos.create(turno)
 
         const headers = {
-            'Access-Control-Allow-Origin': '*', /* @dev First, read about security */
+            'Access-Control-Allow-Origin': '*', 
             'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
-            'Access-Control-Max-Age': 2592000, // 30 days
+            'Access-Control-Max-Age': 2592000, 
             'Content-Type': 'application/json'
         }
         res.writeHead(201, headers);

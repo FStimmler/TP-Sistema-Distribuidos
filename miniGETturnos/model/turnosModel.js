@@ -25,7 +25,7 @@ function create(turno){
             });        
             
             let algunos = mapa.filter(turnoB => {        
-                return turnoB[1]["userid"]==turno.userid && turnoB[1]["fecha"]==turno.fecha && turnoB[1]["branchId"]==turno.branchId;
+                return  turnoB[1]["fecha"]==turno.fecha && turnoB[1]["branchId"]==turno.branchId;
             }).map(turnoB => {
                 return turnoB;
             });             

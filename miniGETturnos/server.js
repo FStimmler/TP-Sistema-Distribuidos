@@ -53,6 +53,8 @@ async function createTurno(req, res) {
 
         const body = await getPostData(req);
 
+        console.log(body);
+
         const { fecha, email, branchId_s } = JSON.parse(body);
 
       
@@ -73,8 +75,8 @@ async function createTurno(req, res) {
             return res.end(JSON.stringify(newTurno));
 
         },(error)=>{
-           
-            res.writeHead(406,headers);
+            console.log(error.status);
+            res.writeHead(error.status,headers);
             res.end(error.toString());
         } )
 

@@ -88,7 +88,7 @@ options.forEach(option =>
         myFormData.forEach((value, key) => (formDataObj[key] = value));
         formDataObj['fecha']=fechautc;
         console.log(formDataObj);
-
+        console.log(JSON.stringify(formDataObj));
         enviar(JSON.stringify(formDataObj));
     }
 
@@ -102,6 +102,7 @@ options.forEach(option =>
         })
             .then(res => response = res )
             .then(data =>{ if(response.status==406) window.alert("ERROR: Turno ocupado")
+                  if(response.status==404) window.alert("No hay turno disponible en ese horario");
                  console.log(response.status)})
             
 

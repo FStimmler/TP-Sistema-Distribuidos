@@ -1,114 +1,109 @@
 <form id="form">
-    <label for="fecha">Fecha</label>
-    <input type="date" id="fecha" name="fecha" min="2018-01-01">
+  <label for="fecha">Fecha</label>
+  <input type="date" id="fecha" min="2018-01-01">
 
-    <label for="hora">Hora</label>
-    <select id="hora">        
-    </select>
+  <label for="hora">Hora</label>
+  <select id="hora">
+  </select>
 
-    <p><label for="email">Email</label>
-        <input type="email" name="email" id="email" />
-    </p>
+  <p><label for="email">Email</label>
+    <input type="email" name="email" id="email" />
+  </p>
 
-    <p><label for="branchId">branchId</label>
-        <input type="number" name="branchId_s" id="branchId" />
-    </p>
+  <p><label for="branchId">branchId</label>
+    <input type="number" name="branchId_s" id="branchId" />
+  </p>
 
-    <div><button type="submit">Submit</button></div>
+  <div><button type="submit">Submit</button></div>
 </form>
 
 
 <script>
 
-let optionList = document.getElementById('hora').options;
-let options = [
-  {
-    text: '15:00',
-    value: '15:00'
-  },
-  {
-    text: '15:30',
-    value: '15:30',
-  },
-  {
-    text: '16:00',
-    value: '16:00'
-  },
-  {
-    text: '16:30',
-    value: '16:30',
-  },
-  {
-    text: '17:00',
-    value: '17:00'
-  },
-  {
-    text: '17:30',
-    value: '17:30',
-  },
-  {
-    text: '18:00',
-    value: '18:00'
-  },
-  {
-    text: '18:30',
-    value: '18:30',
-  },
+  let optionList = document.getElementById('hora').options;
+  let options = [
+    {
+      text: '15:00',
+      value: '15:00'
+    },
+    {
+      text: '15:30',
+      value: '15:30',
+    },
+    {
+      text: '16:00',
+      value: '16:00'
+    },
+    {
+      text: '16:30',
+      value: '16:30',
+    },
+    {
+      text: '17:00',
+      value: '17:00'
+    },
+    {
+      text: '17:30',
+      value: '17:30',
+    },
+    {
+      text: '18:00',
+      value: '18:00'
+    },
+    {
+      text: '18:30',
+      value: '18:30',
+    },
 
-];
+  ];
 
-options.forEach(option =>
-  optionList.add(
-    new Option(option.text, option.value, option.selected)
-  )
-);
-
-
-    function getTurnos() {
-        fetch("http://localhost:5000/api/turnos")
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (jsonResponse) {
-                console.log(jsonResponse);
-            });
-    }
-
-    function handleSubmit(event) {
-        event.preventDefault();
-
-        arrayfecha = document.getElementById('fecha').value.split("-");
-       
-        arrayhora = document.getElementById('hora').value.split(":");
-
-        fechautc=new Date(Date.UTC(arrayfecha[0],arrayfecha[1]-1,arrayfecha[2],arrayhora[0],arrayhora[1]));
-
-        const myFormData = new FormData(event.target);
-        const formDataObj = {};
-        myFormData.forEach((value, key) => (formDataObj[key] = value));
-        formDataObj['fecha']=fechautc;
-        console.log(formDataObj);
-        console.log(JSON.stringify(formDataObj));
-        enviar(JSON.stringify(formDataObj));
-    }
+  options.forEach(option =>
+    optionList.add(
+      new Option(option.text, option.value, option.selected)
+    )
+  );
 
 
+  function getTurnos() {
+    fetch("http://localhost:5000/api/turnos")
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (jsonResponse) {
+        console.log(jsonResponse);
+      });
+  }
 
-    function enviar(value) {
-        var response
-        fetch('http://localhost:5000/api/turnos', {
-            method: 'POST',
-            body: value,
-        })
-            .then(res => response = res )
-            .then(data =>{ if(response.status==406) window.alert("ERROR: Turno ocupado")
-                  if(response.status==404) window.alert("No hay turno disponible en ese horario");
-                 console.log(response.status)})
-            
+  function handleSubmit(event) {
+    event.preventDefault();
 
-    }
+    arrayfecha = document.getElementById('fecha').value.split("-");
 
-    const form = document.querySelector('form');
-    form.addEventListener('submit', handleSubmit);
+    arrayhora = document.getElementById('hora').value.split(":");
+
+    fechautc = new Date(Date.UTC(arrayfecha[0], arrayfecha[1] - 1, arrayfecha[2], arrayhora[0], arrayhora[1]));
+
+    const myFormData = new FormData(event.target);
+    const formDataObj = {};
+    myFormData.forEach((value, key) => (formDataObj[key] = value));
+    formDataObj['fecha'] = fechautc;
+    console.log(formDataObj);
+    console.log(JSON.stringify(formDataObj));
+    enviar(JSON.stringify(formDataObj));
+  }
+
+
+
+  function enviar(value) {
+    var response
+    fetch('http://localhost:5000/api/turnos', {
+      method: 'POST',
+      body: value,
+    })
+      .then(async res => { if (res.status != 201) window.alert(await res.text()) })
+  }
+
+  const form = document.querySelector('form');
+  form.addEventListener('submit', handleSubmit);
 
 </script>

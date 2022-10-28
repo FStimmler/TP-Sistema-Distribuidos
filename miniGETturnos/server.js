@@ -10,23 +10,28 @@ const headers = {
 }
 
 const server = http.createServer((req, res) => {
-
-    if (req.url === '/api/turnos' && req.method === 'GET') {
-        getTurnos(req, res);
+    switch(req.method){
+        case 'GET': 
+            if(req.url === '/api/turnos')
+                getTurnos(req, res)
+            break;
+        case 'POST':
+            if(req.url === '/api/turnos')
+                createTurno(req,res)
+            break;
+        case 'PUT':
+        case 'DELETE':
+            deleteTurno(req, res)
+            break;
     }
-    else if (req.url === '/api/turnos' && req.method === 'POST') {
-
-        createTurno(req, res)
-    }
-
 });
+
 
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 module.exports = server;
-
 
 // @desc    Gets all Turnos
 // @route   GET /api/turnos
@@ -50,22 +55,18 @@ async function getTurnos(req, res) {
 // @route   POST /api/turnos
 async function createTurno(req, res) {
     try {
-
         const body = await getPostData(req);
 
         console.log(body);
 
         const { fecha, email, branchId_s } = JSON.parse(body);
-
-      
-        userid=hashCode(email);
+   
+        userId=hashCode(email);
         branchId = parseInt(branchId_s);
-
-
 
         const turno = {
             fecha,
-            userid,
+            userId,
             email,
             branchId
         }
@@ -80,12 +81,34 @@ async function createTurno(req, res) {
             res.end(error.toString());
         } )
 
-
-        
-
-
     } catch (error) {
         console.log(error)
     }
 
+}
+
+// @desc    modifica Turno by idReserva
+// @route   DELETE /api/reserva/:idReserva
+async function deleteTurno(req, res){
+    try{
+        let {url} = req
+
+        console.log(url)
+        let idReserva = url.split(":")[1]       //value idReserva ingresado
+        const turnoId = await Turnos.findByIdReserva(idReserva)
+
+        console.log(JSON.stringify(turnoId))
+
+        const modifTurno = Turnos.modifyTurno(idReserva).then(()=>{
+            res.writeHead(200, headers);
+            return res.end(JSON.stringify(modifTurno));
+        },(error)=>{
+            console.log(error.status);
+            res.writeHead(error.status,headers);
+            res.end(error.toString());
+        })
+    }
+    catch(error) {
+        console.log(error)
+    }
 }

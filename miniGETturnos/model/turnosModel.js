@@ -3,9 +3,38 @@ const filemanagement = require('../utils')
 const fs = require('fs')
 const { Sinturno } = require('./Errors/sinTurno')
 const { TurnoOcupado } = require('./Errors/turnoOcupado')
+
 function findAll() {
     return new Promise((resolve, reject) => {
         resolve(turnos)
+    })
+}
+
+function findByIdReserva(idReserva){
+    return new Promise((resolve, reject) => {
+        if(turnos.length > idReserva)
+            resolve(turnos[idReserva])
+        else
+            resolve(undefined)
+    })
+}
+
+function modifyTurno(idReserva){
+    return new Promise((resolve, reject) => {
+        fs.readFile('./data/turnos.json', function (err, data){
+            if (err) throw err;
+
+            let turnos = JSON.parse(data)
+
+            if(turnos.length < idReserva)
+                reject(new Sinturno())
+            else{
+                turnos[idReserva]['userId'] = null
+                turnos[idReserva]['email'] = null
+                filemanagement.writeDataToFile('./data/turnos.json', turnos)
+                resolve(turnos[idReserva])
+            }
+        })
     })
 }
 
@@ -31,8 +60,8 @@ function create(turno) {
 
                 console.log(turnoFecha);
 
-                if (turnoFecha[0]['userid'] == null) {
-                    turnoFecha[0]['userid'] = turno['userid'];
+                if (turnoFecha[0]['userId'] == null) {
+                    turnoFecha[0]['userId'] = turno['userId'];
                     turnoFecha[0]['email'] = turno['email'];
                     const newTurno = turno
                     //turnos.push(newTurno)
@@ -52,5 +81,7 @@ function create(turno) {
 
 module.exports = {
     findAll,
+    findByIdReserva,
+    modifyTurno,
     create
 }

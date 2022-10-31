@@ -1,10 +1,6 @@
-<form id="form">
+<form id="form1">
   <label for="fecha">Fecha</label>
   <input type="date" id="fecha" min="2018-01-01">
-
-  <label for="hora">Hora</label>
-  <select id="hora">
-  </select>
 
   <p><label for="email">Email</label>
     <input type="email" name="email" id="email" />
@@ -14,14 +10,20 @@
     <input type="number" name="branchId_s" id="branchId" />
   </p>
 
-  <div><button type="submit">Submit</button></div>
+  <div><button type="submit">Buscar turnos</button></div>
+</form>
+
+<form id="form2">
+  <label for="hora">Hora</label>
+  <select id="hora">
+  </select>
 </form>
 
 
 <script>
 
   let optionList = document.getElementById('hora').options;
-  let options = [
+/*   let options = [
     {
       text: '15:00',
       value: '15:00'
@@ -61,17 +63,53 @@
     optionList.add(
       new Option(option.text, option.value, option.selected)
     )
-  );
+  ); */
 
 
-  function getTurnos() {
-    fetch("http://localhost:5000/api/turnos")
+  function getTurnos(params) {
+
+    console.log(params);
+    
+    fetch("http://localhost:5000/api/turnos"+params)
       .then(function (response) {
         return response.json();
       })
       .then(function (jsonResponse) {
         console.log(jsonResponse);
+        const mapa = (JSON.parse(JSON.stringify(jsonResponse))).map(function (element) {
+                return element;
+        });
+
+        mapa.forEach((element)=>{
+          let hora = element.fecha.split("T")[1].split(':');
+          optionList.add(
+            new Option(hora[0]+":"+hora[1],hora[0]+":"+hora[1], false)
+          )
+        })
+
       });
+  }
+
+  function buscarTurnos(event) {
+    event.preventDefault();
+
+    arrayfecha = document.getElementById('fecha').value.split("-");
+
+
+
+    fechautc = new Date(Date.UTC(arrayfecha[0], arrayfecha[1] - 1, arrayfecha[2]));
+
+    const myFormData = new FormData(event.target);
+    const formDataObj = {};
+    myFormData.forEach((value, key) => (formDataObj[key] = value));
+    formDataObj['fecha'] = fechautc;
+    console.log(formDataObj);
+    console.log(JSON.stringify(formDataObj));
+    querry="?fecha="+formDataObj['fecha'].toISOString()
+    +'&branchId='+formDataObj['branchId_s']
+    +'&userId=null';
+
+    getTurnos(querry);
   }
 
   function handleSubmit(event) {
@@ -92,8 +130,6 @@
     enviar(JSON.stringify(formDataObj));
   }
 
-
-
   function enviar(value) {
     var response
     fetch('http://localhost:5000/api/turnos', {
@@ -104,6 +140,6 @@
   }
 
   const form = document.querySelector('form');
-  form.addEventListener('submit', handleSubmit);
+  form.addEventListener('submit', buscarTurnos);
 
 </script>

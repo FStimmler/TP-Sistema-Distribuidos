@@ -17,73 +17,33 @@
   <label for="hora">Hora</label>
   <select id="hora">
   </select>
+  <div><button type="submit">Enviar</button></div>
 </form>
 
 
 <script>
 
   let optionList = document.getElementById('hora').options;
-/*   let options = [
-    {
-      text: '15:00',
-      value: '15:00'
-    },
-    {
-      text: '15:30',
-      value: '15:30',
-    },
-    {
-      text: '16:00',
-      value: '16:00'
-    },
-    {
-      text: '16:30',
-      value: '16:30',
-    },
-    {
-      text: '17:00',
-      value: '17:00'
-    },
-    {
-      text: '17:30',
-      value: '17:30',
-    },
-    {
-      text: '18:00',
-      value: '18:00'
-    },
-    {
-      text: '18:30',
-      value: '18:30',
-    },
-
-  ];
-
-  options.forEach(option =>
-    optionList.add(
-      new Option(option.text, option.value, option.selected)
-    )
-  ); */
-
+  var formdata;
 
   function getTurnos(params) {
 
-    console.log(params);
-    
-    fetch("http://localhost:5000/api/turnos"+params)
+    fetch("http://localhost:5000/api/turnos" + params)
       .then(function (response) {
         return response.json();
       })
       .then(function (jsonResponse) {
-        console.log(jsonResponse);
         const mapa = (JSON.parse(JSON.stringify(jsonResponse))).map(function (element) {
-                return element;
+          return element;
         });
 
-        mapa.forEach((element)=>{
+
+        document.getElementById("hora").innerHTML = "";
+        mapa.forEach((element) => {
           let hora = element.fecha.split("T")[1].split(':');
+         
           optionList.add(
-            new Option(hora[0]+":"+hora[1],hora[0]+":"+hora[1], false)
+            new Option(hora[0] + ":" + hora[1], hora[0] + ":" + hora[1], false)
           )
         })
 
@@ -98,16 +58,14 @@
 
 
     fechautc = new Date(Date.UTC(arrayfecha[0], arrayfecha[1] - 1, arrayfecha[2]));
-
+    formdata = event.target;
     const myFormData = new FormData(event.target);
     const formDataObj = {};
     myFormData.forEach((value, key) => (formDataObj[key] = value));
     formDataObj['fecha'] = fechautc;
-    console.log(formDataObj);
-    console.log(JSON.stringify(formDataObj));
-    querry="?fecha="+formDataObj['fecha'].toISOString()
-    +'&branchId='+formDataObj['branchId_s']
-    +'&userId=null';
+    querry = "?fecha=" + formDataObj['fecha'].toISOString()
+      + '&branchId=' + formDataObj['branchId_s']
+      + '&userId=null';
 
     getTurnos(querry);
   }
@@ -120,13 +78,12 @@
     arrayhora = document.getElementById('hora').value.split(":");
 
     fechautc = new Date(Date.UTC(arrayfecha[0], arrayfecha[1] - 1, arrayfecha[2], arrayhora[0], arrayhora[1]));
-
+    const myFormData2 = new FormData(formdata);
     const myFormData = new FormData(event.target);
     const formDataObj = {};
+    myFormData2.forEach((value, key) => (formDataObj[key] = value));
     myFormData.forEach((value, key) => (formDataObj[key] = value));
     formDataObj['fecha'] = fechautc;
-    console.log(formDataObj);
-    console.log(JSON.stringify(formDataObj));
     enviar(JSON.stringify(formDataObj));
   }
 
@@ -139,7 +96,9 @@
       .then(async res => { if (res.status != 201) window.alert(await res.text()) })
   }
 
-  const form = document.querySelector('form');
-  form.addEventListener('submit', buscarTurnos);
+  const form1 = document.querySelector('#form1');
+  form1.addEventListener('submit', buscarTurnos);
+  const form2 = document.querySelector('#form2');
+  form2.addEventListener('submit', handleSubmit);
 
 </script>

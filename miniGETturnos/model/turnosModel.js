@@ -10,6 +10,31 @@ function findAll() {
     })
 }
 
+function findQ(params) {
+    return new Promise((resolve, reject) => {
+        fs.readFile('./data/turnos.json', function (err, data) {
+
+            if (err) throw err;
+
+            const mapa = (JSON.parse(data)).map(function (element) {
+                return element;
+            });
+
+            let turnosQ = mapa.filter(turnoB => {
+                return  (!params.has('fecha') || turnoB["fecha"].split('T')[0] == params.get('fecha').split('T')[0]) && (!params.has('branchId') || turnoB["branchId"] == params.get('branchId'))&& (!params.has('userId') || turnoB["userId"] == params.get('userId') || (turnoB["userId"] ==null && params.get('userId')=='null')   );
+            }).map(turnoB => {
+                return turnoB;
+            });
+
+            resolve(turnosQ);
+
+        });
+
+
+    })
+
+}
+
 function findByIdReserva(idReserva){
     return new Promise((resolve, reject) => {
         if(turnos.length > idReserva)
@@ -81,6 +106,7 @@ function create(turno) {
 
 module.exports = {
     findAll,
+    findQ,
     findByIdReserva,
     modifyTurno,
     create

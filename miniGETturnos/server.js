@@ -12,7 +12,7 @@ const headers = {
 const server = http.createServer((req, res) => {
     switch(req.method){
         case 'GET': 
-            if(req.url === '/api/turnos')
+            if(req.url.startsWith('/api/turnos'))
                 getTurnos(req, res)
             break;
         case 'POST':
@@ -37,8 +37,14 @@ module.exports = server;
 // @route   GET /api/turnos
 async function getTurnos(req, res) {
     try {
-        const turnos = await Turnos.findAll()
-
+        var turnos;
+        const params = new URLSearchParams(req.url.split('?')[1]);
+        if(params.toString()){
+            turnos = await Turnos.findQ(params);
+        }
+        else{
+            turnos = await Turnos.findAll();
+        }
         const headers = {
             'Access-Control-Allow-Origin': '*', 
             'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
@@ -55,6 +61,8 @@ async function getTurnos(req, res) {
 // @route   POST /api/turnos
 async function createTurno(req, res) {
     try {
+
+
         const body = await getPostData(req);
 
         console.log(body);
@@ -94,7 +102,8 @@ async function deleteTurno(req, res){
         let {url} = req
 
         console.log(url)
-        let idReserva = url.split(":")[1]       //value idReserva ingresado
+        let idReserva = url.split("/")[3]       //value idReserva ingresado
+        console.log(idReserva);
         const turnoId = await Turnos.findByIdReserva(idReserva)
 
         console.log(JSON.stringify(turnoId))

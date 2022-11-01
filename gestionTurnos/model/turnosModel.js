@@ -74,7 +74,8 @@ function create(turno) {
             });
 
             let turnoFecha = mapa.filter(turnoB => {
-                return turnoB["fecha"] == turno.fecha && turnoB["branchId"] == turno.branchId;
+                console.log(turnoB["id"]+" / "+turno.id);
+                return turnoB["id"] == turno.id;
             }).map(turnoB => {
                 return turnoB;
             });
@@ -85,7 +86,7 @@ function create(turno) {
 
                 console.log(turnoFecha);
 
-                if (turnoFecha[0]['userId'] == null) {
+                if (turnoFecha[0]['userId'] === null) {
                     turnoFecha[0]['userId'] = turno['userId'];
                     turnoFecha[0]['email'] = turno['email'];
                     const newTurno = turno

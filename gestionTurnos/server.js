@@ -16,7 +16,7 @@ const server = http.createServer((req, res) => {
                 getTurnos(req, res)
             break;
         case 'POST':
-            if(req.url === '/api/turnos')
+            if(req.url.startsWith('/api/turnos'))
                 createTurno(req,res)
             break;
         case 'PUT':
@@ -37,7 +37,6 @@ module.exports = server;
 // @route   GET /api/turnos
 async function getTurnos(req, res) {
     try {
-        console.log("aaaaa");
         var turnos;
         const params = new URLSearchParams(req.url.split('?')[1]);
         if(params.toString()){
@@ -63,21 +62,19 @@ async function getTurnos(req, res) {
 async function createTurno(req, res) {
     try {
 
-
+        let {url} = req
+        let idReserva = url.split("/")[3]  //value idReserva ingresado
+        console.log(idReserva);     
         const body = await getPostData(req);
 
-        console.log(body);
-
-        const { fecha, email, branchId_s } = JSON.parse(body);
-   
-        userId=hashCode(email);
-        branchId = parseInt(branchId_s);
-
+        var { email,userId } = JSON.parse(body);
+        userId=Number(userId);
+        var id=Number(idReserva);
+        console.log(userId);
         const turno = {
-            fecha,
+            id,
             userId,
             email,
-            branchId
         }
 
         const newTurno = Turnos.create(turno).then( ()=>{
@@ -101,8 +98,6 @@ async function createTurno(req, res) {
 async function deleteTurno(req, res){
     try{
         let {url} = req
-
-        console.log(url)
         let idReserva = url.split("/")[3]       //value idReserva ingresado
         console.log(idReserva);
         const turnoId = await Turnos.findByIdReserva(idReserva)

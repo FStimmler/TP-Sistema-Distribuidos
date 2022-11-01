@@ -13,24 +13,9 @@ const server = http.createServer((req, res) => {
         callTurnos(req, res);
     }
 
-
-
-    /* 
-     switch(req.method){
-         case 'GET': 
-             if(req.url.startsWith('/api/turnos'))
-                 getTurnos(req, res)
-             break;
-         case 'POST':
-             if(req.url === '/api/turnos')
-                 createTurno(req,res)
-             break;
-         case 'PUT':
-         case 'DELETE':
-             deleteTurno(req, res)
-             break;
-     }
-     */
+    if (req.url.includes('/api/sucursales')) {
+        callSucursales(req, res);
+    }
 });
 
 
@@ -67,5 +52,30 @@ async function callTurnos(req, res) {
     
 }
 
+async function callSucursales(req, res) {
+    const reqbody = await getPostData(req);
+    console.log(reqbody);
+
+    const request = http.request('http://localhost:5002'+req.url, { method: req.method }, function (response) {
+
+        let body = ''
+
+        response.on('data', (chunk) => {
+            body += chunk;
+        });
+
+        response.on('end', () => {
+
+            res.writeHead(response.statusCode, headers);
+            res.end(body)
+        });
+
+
+
+    });
+    request.write(reqbody);
+    request.end();
+    
+}
 
 

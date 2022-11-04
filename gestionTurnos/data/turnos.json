@@ -1,1 +1,43 @@
-[{"id":0,"fecha":"2022-10-05T15:30:00.000Z","userId":null,"branchId":4},{"id":1,"fecha":"2022-10-05T16:30:00.000Z","userId":null,"email":null,"branchId":6},{"id":2,"fecha":"2022-10-03T17:00:00.000Z","userId":null,"email":"","branchId":54},{"id":3,"fecha":"2022-10-03T17:30:00.000Z","userId":0,"email":"a@a.com","branchId":54},{"id":4,"fecha":"2022-10-03T18:00:00.000Z","userId":null,"branchId":54,"email":"a@a.com"},{"id":5,"fecha":"2022-10-03T19:00:00.000Z","userId":null,"email":"","branchId":54}]
+[
+    {
+        "id": 0,
+        "fecha": "2022-10-05T15:30:00.000Z",
+        "userId": null,
+        "branchId": 4
+    },
+    {
+        "id": 0,
+        "fecha": "2022-10-05T16:30:00.000Z",
+        "userId": null,
+        "email": null,
+        "branchId": 6
+    },
+    {
+        "id": 0,
+        "fecha": "2022-10-03T17:00:00.000Z",
+        "userId": null,
+        "email": "",
+        "branchId": 54
+    },
+    {
+        "id": 3,
+        "fecha": "2022-10-03T17:30:00.000Z",
+        "userId": null,
+        "email": "",
+        "branchId": 54
+    },
+    {
+        "id": 4,
+        "fecha": "2022-10-03T18:00:00.000Z",
+        "userId": null,
+        "branchId": 54,
+        "email": ""
+    },
+    {
+        "id": 5,
+        "fecha": "2022-10-03T19:00:00.000Z",
+        "userId": null,
+        "email": "",
+        "branchId": 54
+    }
+]

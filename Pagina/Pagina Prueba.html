@@ -19,8 +19,11 @@
         <input type="email" name="email" id="email" />
       </li>
 
-      <li><label for="branchId">branchId</label>
+      <!-- <li><label for="branchId">branchId</label>
         <input type="number" name="branchId_s" id="branchId" />
+      </li> -->
+      <li><label for="branchId">Sucursal</label>
+        <select id="branchId"></select>
       </li>
 
       <li class="button"><button type="submit">Buscar turnos</button></li>
@@ -41,8 +44,10 @@
 
   <script>
 
-    let optionList = document.getElementById('hora').options;
+    let optionListHora = document.getElementById('hora').options;
+    let optionListSucursal = document.getElementById('branchId').options;
     var formdata;
+    getSucursales();
 
     function getTurnos(params) {
 
@@ -60,13 +65,34 @@
           mapa.forEach((element) => {
             let hora = element.fecha.split("T")[1].split(':');
 
-            optionList.add(
+            optionListHora.add(
               new Option(hora[0] + ":" + hora[1], element.id)
             )
           })
 
         });
     }
+
+    function getSucursales() {
+      fetch("http://localhost:5002/api/sucursales")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (jsonResponse) {
+          const mapa = (JSON.parse(JSON.stringify(jsonResponse))).map(function (element) {
+            return element;
+          });
+
+          console.log(mapa);
+          document.getElementById("branchId").innerHTML = "";
+          mapa.forEach((element) => {
+            optionListSucursal.add(
+              new Option(element.nombre, element.id)
+            )
+          })
+        });
+    }
+
 
     function buscarTurnos(event) {
       event.preventDefault();
@@ -79,6 +105,7 @@
       const formDataObj = {};
       myFormData.forEach((value, key) => (formDataObj[key] = value));
       formDataObj['fecha'] = fechautc;
+      formDataObj['branchId_s'] = document.getElementById('branchId').value;
       querry = "?fecha=" + formDataObj['fecha'].toISOString()
         + '&branchId=' + formDataObj['branchId_s']
         + '&userId=null';
@@ -92,8 +119,8 @@
       id = document.getElementById('hora').value;
 
       const formDataObj = {};
-      formDataObj['email']=document.getElementById('email').value;
-      formDataObj['userId']=0;
+      formDataObj['email'] = document.getElementById('email').value;
+      formDataObj['userId'] = 0;
       enviar(id, JSON.stringify(formDataObj));
     }
 

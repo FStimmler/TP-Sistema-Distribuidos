@@ -1,14 +1,27 @@
 [
     {
         "id": 0,
-        "lat": 3,
-        "long": 23,
-        "nombre": "panchos lo de carlos"
+        "lat": -57.565097808838,
+        "long": -37.963966574241,
+        "nombre": "Peluqueria Vázquez"
     },
     {
-        "id": 54,
-        "lat": 35,
-        "long": -2,
-        "nombre": "lo de carlos sin pachos"
+        "id": 0,
+        "lat": -57.574367523193,
+        "long": -37.954886768184,
+        "nombre": "Peluqueria Stimmler"
+    },
+    {
+        "id": 0,
+        "lat": -57.575483322144,
+        "long": -37.962071970343,
+        "nombre": "Peluqueria Echeverria"
+    },
+    {
+        "id": 0,
+        "lat": -57.566728591919,
+        "long": -37.957196621611,
+        "nombre": "Peluqueria Ezama"
     }
+
 ]

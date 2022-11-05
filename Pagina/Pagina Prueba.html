@@ -19,9 +19,9 @@
         <input type="email" name="email" id="email" />
       </li>
 
-      <!-- <li><label for="branchId">branchId</label>
-        <input type="number" name="branchId_s" id="branchId" />
-      </li> -->
+      <iframe id="myframe"
+        src="https://app.cartes.io/maps/784bf9d1-aa8b-4156-b8b4-d056ffc57904/embed?lat=-37.963215068890825&lng=-57.55505561828614&zoom=13"
+        width="100%" height="300"></iframe>
       <li><label for="branchId">Sucursal</label>
         <select id="branchId"></select>
       </li>
@@ -43,11 +43,14 @@
   </form>
 
   <script>
-
+    const map_uuid = "332410b2-7128-458a-b5c2-505c1711f3c2";
+    const map_token = "Fg0EEcoSMAGxDXkdhMTTwCq9g5cl7lWx"
     let optionListHora = document.getElementById('hora').options;
     let optionListSucursal = document.getElementById('branchId').options;
     var formdata;
+    var sucursales;
     getSucursales();
+    cargarMapa();
 
     function getTurnos(params) {
 
@@ -60,7 +63,6 @@
             return element;
           });
 
-          console.log(mapa);
           document.getElementById("hora").innerHTML = "";
           mapa.forEach((element) => {
             let hora = element.fecha.split("T")[1].split(':');
@@ -79,13 +81,11 @@
           return response.json();
         })
         .then(function (jsonResponse) {
-          const mapa = (JSON.parse(JSON.stringify(jsonResponse))).map(function (element) {
+          sucursales = (JSON.parse(JSON.stringify(jsonResponse))).map(function (element) {
             return element;
           });
-
-          console.log(mapa);
           document.getElementById("branchId").innerHTML = "";
-          mapa.forEach((element) => {
+          sucursales.forEach((element) => {
             optionListSucursal.add(
               new Option(element.nombre, element.id)
             )
@@ -125,7 +125,6 @@
     }
 
     function enviar(id, value) {
-      console.log(value);
       var response
       fetch('http://localhost:5000/api/turnos/' + id, {
         method: 'POST',
@@ -133,6 +132,48 @@
       })
         .then(async res => { if (res.status != 201) window.alert(await res.text()) })
     }
+
+    function cargarMapa() {
+
+      try {
+        var that = document.getElementById('myframe');
+
+        (that.contentWindow || that.contentDocument).location.href;
+      }
+      catch (err) { }
+
+      fetch("https://cartes.io/api/maps/" + map_uuid + "/markers")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (jsonResponse) {
+          jsonResponse.forEach((sucursal) => {
+            buscarExisteSucursal(sucursal.id, sucursal.category.name, sucursal.location.coordinates)
+          })
+        });
+
+
+    }
+
+    function buscarExisteSucursal(idmarcador, nombre, cordenadas) {
+      var esta = false;
+      sucursales.forEach((element) => {
+        esta = esta || ((element.nombre == nombre) && (element.lat == cordenadas[0]) && (element.long == cordenadas[1]));
+      });
+
+
+      if (!esta) {
+        borrarMarcador(idmarcador);
+      }
+
+    }
+
+    function borrarMarcador(idmarcador) {
+      fetch('https://cartes.io/api/maps/' + map_uuid + '/markers/' + idmarcador + 'map_token=' + map_token, {
+        method: 'DELETE'
+      })
+    }
+
 
     const form1 = document.querySelector('#form1');
     form1.addEventListener('submit', buscarTurnos);

@@ -78,6 +78,27 @@ async function createTurno(req, res) {
         }
 
         const newTurno = Turnos.create(turno).then( ()=>{
+            const request = http.request('http://localhost:5004/api/notificacion', {
+                method: 'POST', 
+                headers: {
+                    'Accept': '*/*',
+                    'Connection': 'keep-alive',
+                    'Content-Type': 'application/json'
+                }
+            }, function (response) {
+                    res.writeHead(response.statusCode, headers);
+                    res.end()
+            });
+
+            const mailbody = {
+                "destinatario": email,
+                "asunto": "Reserva de turno exitosa.",
+                "cuerpo": "felicitaciones reservaste un turno"
+            }
+            request.write(JSON.stringify(mailbody));        //envio mail
+            request.end();
+            //-----------------------------
+
             res.writeHead(201, headers);
             return res.end(JSON.stringify(newTurno));
 

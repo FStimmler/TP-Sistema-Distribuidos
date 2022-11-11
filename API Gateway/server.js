@@ -9,7 +9,7 @@ const headers = {
 
 const server = http.createServer((req, res) => {
 
-    if (req.url.includes('/api/turnos')) {
+    if (req.url.includes('/api/reservas')) {
         callTurnos(req, res);
     }
 

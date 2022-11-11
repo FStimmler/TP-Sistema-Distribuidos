@@ -1,23 +1,24 @@
 const http = require('http')
+const { pasoTiempoConfirmacion } = require('./model/Errors/pasoTiempoConfirmacion')
 const Turnos = require('./model/turnosModel')
 const { getPostData } = require('./utils')
-const { hashCode } =require('./utils')
+const { hashCode } = require('./utils')
 
 const headers = {
-    'Access-Control-Allow-Origin': '*', 
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
     'Content-Type': 'application/json'
 }
 
 const server = http.createServer((req, res) => {
-    switch(req.method){
-        case 'GET': 
-            if(req.url.startsWith('/api/turnos'))
+    switch (req.method) {
+        case 'GET':
+            if (req.url.startsWith('/api/reservas'))
                 getTurnos(req, res)
             break;
         case 'POST':
-            if(req.url.startsWith('/api/turnos'))
-                createTurno(req,res)
+            if (req.url.startsWith('/api/reservas'))
+                createTurno(req, res)
             break;
         case 'PUT':
         case 'DELETE':
@@ -39,14 +40,14 @@ async function getTurnos(req, res) {
     try {
         var turnos;
         const params = new URLSearchParams(req.url.split('?')[1]);
-        if(params.toString()){
+        if (params.toString()) {
             turnos = await Turnos.findQ(params);
         }
-        else{
+        else {
             turnos = await Turnos.findAll();
         }
         const headers = {
-            'Access-Control-Allow-Origin': '*', 
+            'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
             'Content-Type': 'application/json'
         }
@@ -62,14 +63,15 @@ async function getTurnos(req, res) {
 async function createTurno(req, res) {
     try {
 
-        let {url} = req
-        let idReserva = url.split("/")[3]  //value idReserva ingresado
-        console.log(idReserva);     
+        let { url } = req
+        let idReserva = url.split("/")[4];  //value idReserva ingresado
+        let solicitud = url.split("/")[3];
+        console.log(idReserva);
         const body = await getPostData(req);
 
-        var { email,userId } = JSON.parse(body);
-        userId=Number(userId);
-        var id=Number(idReserva);
+        var { email, userId } = JSON.parse(body);
+        userId = Number(userId);
+        var id = Number(idReserva);
         console.log(userId);
         const turno = {
             id,
@@ -77,36 +79,50 @@ async function createTurno(req, res) {
             email,
         }
 
-        const newTurno = Turnos.create(turno).then( ()=>{
-            const request = http.request('http://localhost:5004/api/notificacion', {
-                method: 'POST', 
-                headers: {
-                    'Accept': '*/*',
-                    'Connection': 'keep-alive',
-                    'Content-Type': 'application/json'
-                }
-            }, function (response) {
+        if (solicitud == "confirmar") {
+            const newTurno = Turnos.create(turno).then(() => {
+                const request = http.request('http://localhost:5004/api/notificacion', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': '*/*',
+                        'Connection': 'keep-alive',
+                        'Content-Type': 'application/json'
+                    }
+                }, function (response) {
                     res.writeHead(response.statusCode, headers);
                     res.end()
-            });
+                });
 
-            const mailbody = {
-                "destinatario": email,
-                "asunto": "Reserva de turno exitosa.",
-                "cuerpo": "felicitaciones reservaste un turno"
-            }
-            request.write(JSON.stringify(mailbody));        //envio mail
-            request.end();
-            //-----------------------------
+                const mailbody = {
+                    "destinatario": email,
+                    "asunto": "Reserva de turno exitosa.",
+                    "cuerpo": "felicitaciones reservaste un turno"
+                }
+                request.write(JSON.stringify(mailbody));        //envio mail
+                request.end();
+                //-----------------------------
 
-            res.writeHead(201, headers);
-            return res.end(JSON.stringify(newTurno));
+                res.writeHead(201, headers);
+                return res.end(JSON.stringify(newTurno));
 
-        },(error)=>{
-            console.log(error.status);
-            res.writeHead(error.status,headers);
-            res.end(error.toString());
-        } )
+            }, (error) => {
+                console.log(error.status);
+                res.writeHead(error.status, headers);
+                res.end(error.toString());
+            })
+
+        }else{
+            const newTurno = Turnos.solicitar(turno).then(()=>{
+                res.writeHead(201, headers);
+                tiempoConfirmacion(id);
+                return res.end(JSON.stringify(newTurno));
+
+            }, (error) => {
+                console.log(error.status);
+                res.writeHead(error.status, headers);
+                res.end(error.toString());
+            })
+        }
 
     } catch (error) {
         console.log(error)
@@ -116,25 +132,31 @@ async function createTurno(req, res) {
 
 // @desc    modifica Turno by idReserva
 // @route   DELETE /api/reserva/:idReserva
-async function deleteTurno(req, res){
-    try{
-        let {url} = req
+async function deleteTurno(req, res) {
+    try {
+        let { url } = req
         let idReserva = url.split("/")[3]       //value idReserva ingresado
         console.log(idReserva);
         const turnoId = await Turnos.findByIdReserva(idReserva)
 
         console.log(JSON.stringify(turnoId))
 
-        const modifTurno = Turnos.modifyTurno(idReserva).then(()=>{
+        const modifTurno = Turnos.modifyTurno(idReserva).then(() => {
             res.writeHead(200, headers);
             return res.end(JSON.stringify(modifTurno));
-        },(error)=>{
+        }, (error) => {
             console.log(error.status);
-            res.writeHead(error.status,headers);
+            res.writeHead(error.status, headers);
             res.end(error.toString());
         })
     }
-    catch(error) {
+    catch (error) {
         console.log(error)
     }
+}
+
+function tiempoConfirmacion(id){
+    setTimeout(() => {
+        Turnos.pasoTiempo(id);
+    }, 120000);
 }

@@ -136,7 +136,9 @@
           else {
             arrayfecha = document.getElementById('fecha').value.split("-");     
             var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];  
-            texto = "Esta apunto de reservar un turno el dia " + arrayfecha[2] +" de " + meses[arrayfecha[1] - 1]+" de " + arrayfecha[0];
+            //console.log(form2.hora.options[0].text);    
+            id = document.getElementById('hora').value;          
+            texto = "Esta apunto de reservar un turno el dia " + arrayfecha[2] +" de " + meses[arrayfecha[1] - 1]+" de " + arrayfecha[0] + " a las " + form2.hora.options[id].text;  
             if (confirm(texto) == true) {
               fetch('http://localhost:5000/api/reservas/confirmar/' + id, {
                 method: 'POST',

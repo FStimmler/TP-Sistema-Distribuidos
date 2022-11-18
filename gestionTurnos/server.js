@@ -40,12 +40,14 @@ async function getTurnos(req, res) {
     try {
         var turnos;
         const params = new URLSearchParams(req.url.split('?')[1]);
+        console.log("GET");
         if (params.toString()) {
             turnos = await Turnos.findQ(params);
         }
         else {
             turnos = await Turnos.findAll();
         }
+   
         const headers = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',

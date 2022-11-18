@@ -17,6 +17,7 @@ function findQ(params) {
 
             if (err) throw err;
 
+           console.log("Q");
             const mapa = (JSON.parse(data)).map(function (element) {
                 return element;
             });
@@ -26,6 +27,7 @@ function findQ(params) {
             }).map(turnoB => {
                 return turnoB;
             });
+            console.log(turnosQ);
 
             resolve(turnosQ);
 

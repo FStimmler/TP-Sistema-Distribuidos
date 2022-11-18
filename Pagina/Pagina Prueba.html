@@ -51,18 +51,18 @@
     var sucursales;
     getSucursales();
     cargarMapa();
-
+    optionListSucursal.get
     function getTurnos(params) {
 
-      fetch("http://localhost:5000/api/turnos" + params)
+      fetch("http://localhost:5000/api/reservas" + params)
         .then(function (response) {
           return response.json();
         })
         .then(function (jsonResponse) {
+          console.log("a");
           const mapa = (JSON.parse(JSON.stringify(jsonResponse))).map(function (element) {
             return element;
           });
-
           document.getElementById("hora").innerHTML = "";
           mapa.forEach((element) => {
             let hora = element.fecha.split("T")[1].split(':');
@@ -125,12 +125,26 @@
     }
 
     function enviar(id, value) {
+      var branch=document.getElementById("branchId");
       var response
-      fetch('http://localhost:5000/api/turnos/' + id, {
+      fetch('http://localhost:5000/api/reservas/solicitar/' + id, {
         method: 'POST',
         body: value,
       })
-        .then(async res => { if (res.status != 201) window.alert(await res.text()) })
+        .then(async res => {
+          if (res.status != 201) window.alert(await res.text())
+          else {
+            if (confirm("Esta apunto de reservar un turno") == true) {
+              fetch('http://localhost:5000/api/reservas/confirmar/' + id, {
+                method: 'POST',
+                body: value,
+              })
+                .then(async res => {
+                  if (res.status != 201) window.alert(await res.text())
+                })
+            }
+          }
+        })
     }
 
     function cargarMapa() {

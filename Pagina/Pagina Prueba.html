@@ -134,7 +134,10 @@
         .then(async res => {
           if (res.status != 201) window.alert(await res.text())
           else {
-            if (confirm("Esta apunto de reservar un turno") == true) {
+            arrayfecha = document.getElementById('fecha').value.split("-");     
+            var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];  
+            texto = "Esta apunto de reservar un turno el dia " + arrayfecha[2] +" de " + meses[arrayfecha[1] - 1]+" de " + arrayfecha[0];
+            if (confirm(texto) == true) {
               fetch('http://localhost:5000/api/reservas/confirmar/' + id, {
                 method: 'POST',
                 body: value,

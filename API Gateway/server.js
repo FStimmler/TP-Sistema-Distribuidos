@@ -19,7 +19,7 @@ const server = http.createServer((req, res) => {
 });
 
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
@@ -30,7 +30,7 @@ async function callTurnos(req, res) {
     const reqbody = await getPostData(req);
     console.log(reqbody);
 
-    const request = http.request('http://localhost:5000'+req.url, { method: req.method }, function (response) {
+    const request = http.request('http://localhost:5001'+req.url, { method: req.method }, function (response) {
 
         let body = ''
 

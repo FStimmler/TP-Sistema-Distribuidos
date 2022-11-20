@@ -1,0 +1,242 @@
+html {
+    box-sizing: border-box;
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+*,
+*:after,
+*:before {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
+
+a {
+    color: #01579B;
+    transition: color 0.3 ease;
+}
+
+a:hover {
+    color: #00b0ff;
+}
+
+h1 {
+    text-align: center;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.error {
+    padding: 1rem;
+    font-size: 150%;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    background-color: #dc3545;
+}
+
+nav {
+    background-color: #222222;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+
+    position: sticky;
+    top: 0px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0px 10px;
+}
+
+nav a :hover {
+    text-decoration: underline;
+}
+
+/* Si la pantalla es menor a 600 pixels de ancho, esconde todos los links salvo el primero
+Se debe mejorar para agregar un menu tipo hamburguesa --> TODO
+*/
+
+@media screen and (max-width: 600px) {
+    nav a:not(:first-child) {
+        display: none;
+    }
+
+    nav a.icon {
+        float: right;
+        display: block;
+    }
+}
+
+
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+
+.parent {
+    /*border: 3px solid #01579B;
+    border-radius: 2em;*/
+    margin: 1rem;
+    padding: 2rem 2rem;
+    text-align: center;
+}
+
+.child {
+    display: inline-block;
+    border: 3px solid #01579B;
+    border-radius: 1em;
+    padding: 1rem 1rem;
+    vertical-align: middle;
+    padding: 1rem;
+    margin: 2rem;
+    width: 25%;
+    background-color: #eee;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+
+
+
+#horario-label {
+    padding: 10px;
+}
+
+form {
+    margin: 0 auto;
+    width: 400px;
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 1em;
+    background-color: #EEE;
+    border: 3px solid #01579B;
+}
+
+#form2 {
+    display: block;
+    text-align: center;
+}
+
+#form1 {
+    display: block;
+    margin-top: 50px;
+    text-align: center;
+
+}
+
+
+
+.wrapper {
+    display: block;
+    text-align: center;
+}
+
+button {
+    padding: 10px;
+    margin: 10px;
+    background-color: #222222;
+    border-color: #222222;
+    color: #DDD;
+    border-radius: 10px;
+}
+
+button:hover {
+    background-color: #01579B;
+    border-color: #01579B;
+
+}
+
+.inner-div {
+    margin: 0.5rem;
+    padding: 0.5rem;
+}
+
+
+.container {
+
+    display: inline-block;
+    text-align: center;
+
+}
+
+.grupo {
+    padding: 5px;
+}
+
+.disabled-text {
+    background-color: #dddddd;
+    color: #999;
+    border-color: #dddddd;
+    border-radius: 10px;
+}
+
+.disabled-text:hover,
+.disabled-text:focus,
+.disabled-text::selection {
+    border-color: #dddddd;
+}
+
+.disabled-label {
+    color: #999;
+}
+
+#show-turnos {
+    display: block;
+
+}
+
+.turnos-opt {
+    align-items: left;
+    padding: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2
+}
+
+#iframe-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 5px solid #01579B;
+    background-color: #01579B;
+}
+
+iframe {
+    width: 500px; /* It should not be 100% */
+    height: 500px;
+    margin-left: auto; /* Automatic margin from left */
+    margin-right: auto; /* Automatic margin from right */
+    }

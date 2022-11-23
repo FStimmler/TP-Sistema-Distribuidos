@@ -34,7 +34,7 @@ export function About() {
                     </a><br>
                 </li>
                 <li>
-                    <a href="https://github.com/NoeliaEch" class="GH-card" target="_blank">
+                    <a href="https://github.com/PhDNoe" class="GH-card" target="_blank">
                         <i class="fa fa-github"></i>
                         <span>GH de Noe</span>
                     </a><br>

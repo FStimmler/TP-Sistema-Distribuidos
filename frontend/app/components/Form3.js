@@ -2,7 +2,7 @@ export function Form3() {
     // Creamos una form
     const $form = document.createElement("form");
     $form.classList.add('form');
-    $form.id = "form1";
+    $form.id = "form3";
     $form.setAttribute("method", "get");
 
         

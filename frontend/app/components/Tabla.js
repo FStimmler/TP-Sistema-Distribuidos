@@ -1,5 +1,12 @@
-export function Tabla(datos) {
+export function Tabla(reservas, sucursales) {
 
+    let diccionario = {};
+
+    sucursales.forEach(data => {
+        diccionario[data["id"]] = data["nombre"];
+    })
+
+    console.log(diccionario)
     const $wrapper = document.createElement("div");
     $wrapper.id="all-turnos-wrapper";
 
@@ -13,7 +20,7 @@ export function Tabla(datos) {
 
     let my_inner = `
         <tr>
-            <th>Sucursal(branchId)</th>
+            <th>Sucursal</th>
             <th>Fecha y Hora </th>
             <th>Libre? </th>
         </tr>
@@ -23,11 +30,13 @@ export function Tabla(datos) {
     let branchId="";
     let fecha ="";
     let libre ="";
-    datos.forEach(element => {
+    let sucursal = "";
+    reservas.forEach(element => {
         branchId = element["branchId"];
+        
         fecha =new Date(element["fecha"]).toLocaleString();
         libre=element["userId"]==null?"si":"no";
-        my_inner += `<tr><td>${branchId}</td><td>${fecha}</td><td>${libre}</td></tr>`
+        my_inner += `<tr><td>${diccionario[branchId]}</td><td>${fecha}</td><td>${libre}</td></tr>`
         
     });
 

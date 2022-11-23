@@ -2,15 +2,12 @@
 
 import { ajax } from "../helpers/ajax.js";
 import { Form1 } from "./Form1.js";
-import { Lista } from "./Lista.js";
-import { Select } from "./Select.js";
 import { About } from "./About.js";
 import { Contact } from "./Contact.js";
 import { Form2 } from "./Form2.js";
 import { Form3 } from "./Form3.js";
 import { Tabla } from "./Tabla.js";
-import { IFrame } from "./IFrame.js";
-
+import { Confirmacion } from "./Confirmacion.js";
 
 
 
@@ -18,61 +15,57 @@ import { IFrame } from "./IFrame.js";
 export function Router() {
     const d = document;
     const w = window;
-    let ext_branchId = "";
 
     let { hash, search } = location;
     console.log(hash);
 
+    // cuando recien arranca, no muestra nada extra
     if (!hash) {
-        //d.getElementById("main").innerHTML = "<h2>Bienvenido</h2>"
-        //d.getElementById("main").innerHTML = "<h2>Bienvenido</h2>"
+
     }
 
+    // cuando vamos al HOME
     else if (hash === "#/") {
 
         console.log("entre 1")
         d.getElementById("main").innerHTML = null;
-        d.getElementById("main").appendChild(Form1());
-        d.getElementById("main").appendChild(IFrame());
+        getSucursales();
 
+
+        // CUANDO intento obtener los horarios para una sucursal
         if (search != "") {
-            console.log('search.incudes("fecha") --> ', search.includes("fecha"))
-            console.log('search.includes("branchId") --> ', search.includes("branchId"))
+            //console.log('search.incudes("fecha") --> ', search.includes("fecha"))
+            //console.log('search.includes("branchId") --> ', search.includes("branchId"))
             if (search.includes("fecha") && search.includes("branchId") && !search.includes('select-horarios')) {
 
                 const qp = return_query_params(search);
-
+                //console.log("Query params --> ", qp);
 
                 let fecha = qp["fecha"];
                 let branchId = qp["branchId"]
 
-
+                // carga los horarios para la sucursal seleccionada
                 if (fecha != "" && branchId != "") {
-                    d.getElementById("form1").style.display = "none";
-                    d.getElementById("main").innerHTML = `<h2>Datos desde la Api</h2>`;
-
-                    //busca_horarios_en_api(fecha, branchId);
                     cargaTurnos(qp);
                 }
+
+                // una vez que ya tenemos la sucursal, fecha y horario, debemos reservar el horario.
             } else if (search.includes('select-horarios')) {
-                d.getElementById("form1").style.display = "none";
+
 
                 const qp = return_query_params(search);
+                qp["select-horarios"] = decodeURIComponent(qp["select-horarios"]);
 
-                console.log("QueryParams --> ", qp);
-                queryParams["select-horarios"] = decodeURIComponent(qp["select-horarios"]);
-                console.log("QueryParams --> ", qp);
-                let userId = 1; // esto lo pongo en uno, pero no se que va
-                let email = 1; // idem anterior
-                reserva_turnos_en_api(queryParams["select-horarios"], userId, email, queryParams["branchId"]);
-                /**
-                 * 
-                 * “fecha”:date
-                    “userId”:num
-                    “email”:string
-                    “branchId”:num
 
-                 */
+                qp["email"] = decodeURIComponent(qp["email"]);
+                const email = qp["email"];
+                const todo = JSON.parse(qp["select-horarios"]);
+
+                const id = todo.id;
+                const fecha = todo.fecha;
+
+                // con todo, ahora intentamos reservar un turno
+                enviar(id, fecha, email)
 
             }
 
@@ -104,7 +97,7 @@ export function Router() {
         console.log("entre 4")
     } else {
         d.getElementById("main").innerHTML = null;
-        d.getElementById("main").innerHTML = "<h2>Elemento raiz</h2>"
+        //d.getElementById("main").innerHTML = "<h2>Elemento raiz</h2>"
         console.log("entre 5")
 
     }
@@ -122,110 +115,79 @@ const return_query_params = (search) => search.split('?')[1]
     }, {});
 
 
-const busca_horarios_en_api = (fecha, branchId) => {
-
-    const queryP = {
-        "fecha": fecha,
-        "branchId": branchId
-    }
-
-    const fullUrl = addQueryParams("http://localhost:5000/api/reservas", queryP);
-
-    ajax({
-        // url: "http://localhost:5000/api/turnos",
-        url: fullUrl,
-        cbSuccess: (data) => {
-            console.log(JSON.stringify(data));
-            //document.getElementById("main").appendChild(Lista(data));
-            document.getElementById("main").appendChild(Form2(data, queryP))
-            //data.forEach(item => {console.log(item)})
-
-
-        },
-        meth: 'GET'
-    })
-}
-
-
-// @ Reserva un turno
-// /api/turnos?fecha=  &branchId=  &horario
-const reserva_turnos_en_api = (fecha, userId, email, branchId) => {
-
-    const queryP = {
-        "fecha": fecha,
-        "userId": userId,
-        "email": email,
-        "branchId": branchId
-    }
-
-    const fullUrl = addQueryParams("http://localhost:5000/api/reservas", queryP);
-
-    console.log("fullUrl --> ", fullUrl)
-    ajax({
-        // url: "http://localhost:5000/api/turnos",
-        url: fullUrl,
-        cbSuccess: (data) => {
-            console.log(JSON.stringify(data));
-            //document.getElementById("main").appendChild(Lista(data));
-            document.getElementById("main").appendChild(Form2(data))
-            //data.forEach(item => {console.log(item)})
-
-
-        },
-        meth: 'POST'
-    })
-}
-
-
-
-// @   list_params is a list of objects containing all the query params
-// 
-function addQueryParams(url, params) {
-
-    let full_url = url + "?"
-
-
-    const objLen = Object.keys(params).length;
-    Object.keys(params).forEach((key, index) => {
-        full_url += `${key}=${params[key]}`
-        if (index <= objLen - 2) {
-            full_url += "&"
-        }
-        // console.log("params.length --> ", params.length)
-        //console.log(`Key: ${key} --> Value: ${params[key]}`);
-    })
-    // console.log("full url --> ", full_url);
-
-    return full_url;
-
-}
-
-
 
 const getAllTurnos = () => {
     const fullUrl = "http://localhost:5000/api/reservas";
+    const fullUrl2 = "http://localhost:5000/api/sucursales";
 
-    console.log("fullUrl --> ", fullUrl)
+
     ajax({
         // url: "http://localhost:5000/api/turnos",
         url: fullUrl,
         cbSuccess: (data) => {
 
-            document.getElementById("main").appendChild(Tabla(data))
+            ajax({
+                url: fullUrl2,
+                cbSuccess: (data2) => {
+                    document.getElementById("main").appendChild(Tabla(data, data2))
+                },
+                meth: "GET"
+            })
+
 
         },
         meth: 'GET'
     })
 }
 
+
+
+const getLibresTurnos = () => {
+    const fullUrl = "http://localhost:5000/api/reservas/";
+    const fullUrl2 = "http://localhost:5000/api/sucursales";
+
+
+    ajax({
+
+        url: fullUrl,
+        cbSuccess: (data) => {
+            //console.log("filtered data --> ", filteredData)
+
+            ajax({
+                url: fullUrl2,
+                cbSuccess: (data2) => {
+                    const filteredData = data.filter(item => {
+                        return item.userId == null;
+                    })
+                    document.getElementById("main").appendChild(Tabla(filteredData, data2));
+                },
+                meth: "GET"
+            })
+
+
+
+
+        },
+        meth: 'GET'
+    })
+}
+
+
 const cargaTurnos = (qp) => {
     const fullUrl = "http://localhost:5000/api/reservas";
+    const fullUrl2 = "http://localhost:5000/api/sucursales";
     ajax({
         // url: "http://localhost:5000/api/turnos",
         url: fullUrl,
         cbSuccess: (data) => {
+            ajax({
+                url: fullUrl2,
+                cbSuccess: (data2) => {
+                    document.getElementById("form1").style.display = "none";
+                    document.getElementById("main").appendChild(Form2(data, qp, data2));
+                }
+            })
 
-            document.getElementById("main").appendChild(Form2(data, qp))
 
         },
         meth: "GET"
@@ -233,55 +195,78 @@ const cargaTurnos = (qp) => {
 }
 
 
+// Para reservar correctamente, en el server debemos tener 
 
-    const getLibresTurnos = () => {
-        const fullUrl = "http://localhost:5000/api/reservas/";
+// {
+//     "id": 3, // este puede ser cualquier cosa
+//     "fecha": "2022-11-17T20:00:00.000Z",
+//     "userId": null,  // este debe estar en null
+//     "email": null, // este debe estar en null
+//     "branchId": 54,
+//     "status":0 }
 
-        console.log("fullUrl --> ", fullUrl)
-        ajax({
-            // url: "http://localhost:5000/api/turnos",
-            url: fullUrl,
-            cbSuccess: (data) => {
-                //console.log(JSON.stringify(data));
+function enviar(id, fecha, email) {
 
-                const filteredData = data.filter(item => {
-                    return item.userId == null;
-                })
-                console.log("filtered data --> ", filteredData)
-                document.getElementById("main").appendChild(Tabla(filteredData))
+    const url1 = 'http://localhost:5000/api/reservas/solicitar/' + id;
+    const url2 = 'http://localhost:5000/api/reservas/confirmar/' + id;
+    const body1 = JSON.stringify({ "userId": 0 });
+    const body2 = JSON.stringify({ "email": email });
 
-
-
-            },
-            meth: 'GET'
-        })
+    const dias_semana = {
+        0: "Domingo",
+        1: "Lunes",
+        2: "Martes",
+        3: "Miercoles",
+        4: "Jueves",
+        5: "Viernes",
+        6: "Sabado"
     }
 
-    function enviar(id, value) {
-        var branch = document.getElementById("branchId");
-        var response
-        fetch('http://localhost:5000/api/reservas/solicitar/' + id, {
-            method: 'POST',
-            body: value,
-        })
-            .then(async res => {
-                if (res.status != 201) window.alert(await res.text())
-                else {
-                    arrayfecha = document.getElementById('fecha').value.split("-");
-                    var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-                    //console.log(form2.hora.options[0].text);    
-                    id = document.getElementById('hora').value;
-                    texto = "Esta apunto de reservar un turno el dia " + arrayfecha[2] + " de " + meses[arrayfecha[1] - 1] + " de " + arrayfecha[0] + " a las " + form2.hora.options[id].text;
-                    if (confirm(texto) == true) {
-                        fetch('http://localhost:5000/api/reservas/confirmar/' + id, {
-                            method: 'POST',
-                            body: value,
+    fetch(url1, {
+        method: 'POST',
+        body: body1,
+    })
+        .then(async res => {
+            document.getElementById("main").innerHTML = null;
+            if (res.status != 201) window.alert(await res.text())
+            else {
+
+                let fc = new Date(fecha);
+                let dia = fc.getDay();
+                let fechita = fc.toLocaleDateString();
+                let hora = fc.toLocaleTimeString();
+                let texto = `Esta a punto de reservar un turno el dia ${dias_semana[dia]} ${fechita} a las ${hora}`;
+                if (confirm(texto) == true) {
+                    fetch(url2, {
+                        method: 'POST',
+                        body: body2,
+                    })
+                        .then(async res => {
+
+                            if (res.status != 201) window.alert(await res.text())
+                            else {
+                                document.getElementById("main").appendChild(Confirmacion());
+                            }
                         })
-                            .then(async res => {
-                                if (res.status != 201) window.alert(await res.text())
-                            })
-                    }
                 }
-            })
-    }
+            }
+        })
+}
 
+
+
+
+
+const getSucursales = () => {
+    const fullUrl = "http://localhost:5000/api/sucursales";
+    ajax({
+
+        url: fullUrl,
+        cbSuccess: (data) => {
+
+            document.getElementById("main").appendChild(Form1(data));            
+
+        },
+        meth: "GET"
+    })
+}

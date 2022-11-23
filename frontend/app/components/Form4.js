@@ -1,7 +1,7 @@
 export function Form4(datos) {
     const $form = document.createElement('form');
     $form.classList.add('form');
-    $form.id = 'form2';
+    $form.id = 'form4';
     $form.setAttribute("method", "get");
 
     const $wrapper = document.createElement('div');
@@ -61,11 +61,11 @@ export function Form4(datos) {
     $select.id = "select-horarios";
     $select.name ="select-horarios";
 
-    console.log("inside form 2 Datos -->", datos)
+    //log("inside form 2 Datos -->", datos)
     if (datos.length>0) {
         //console.log("datos --> ", datos)
         datos.forEach(element => {
-            console.log("Inside form2 datos.element.fecha --> ", element.fecha)
+            //console.log("Inside form2 datos.element.fecha --> ", element.fecha)
             let $option = document.createElement("option");
             let fecha = new Date(element.fecha);
             //$option.value = fecha.getHours();
@@ -73,8 +73,8 @@ export function Form4(datos) {
             $option.text = fecha.toLocaleTimeString();
             $select.appendChild($option)
 
-            console.log("$option.text --> ", $option.text);
-            console.log("$option.value --> ", $option.value);
+            //console.log("$option.text --> ", $option.text);
+            //console.log("$option.value --> ", $option.value);
             //console.log("$element.fecha --> ", element.fecha);
             //console.log("fecha.toLocaleTimeString() --> ", fecha.toLocaleTimeString())
             

@@ -11,9 +11,9 @@ export function Contact() {
         <div class="mail-container container">
         <ul>
             <li><a href="mailto: noelia.echeverria08@gmail.com">Email de Noelia</a></li>
-            <li><a href="mailto: poner_mail_de_cami@gmail.com">Email de Camila</a></li>
-            <li><a href="mailto: poner_mail_de_Fran@gmail.com">Email de Francisco</a></li>
-            <li><a href="mailto: poner_mail_de_Ima@gmail.com">Email de Imanol</a></li>
+            <li><a href="mailto: camilaezama2000@gmail.com">Email de Camila</a></li>
+            <li><a href="mailto: fsilver37@gmail.com">Email de Francisco</a></li>
+            <li><a href="mailto: ruterima@gmail.com">Email de Imanol</a></li>
         </ul>
         </div>
     `

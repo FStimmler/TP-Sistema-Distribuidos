@@ -108,7 +108,7 @@
       formDataObj['branchId_s'] = document.getElementById('branchId').value;
       querry = "?fecha=" + formDataObj['fecha'].toISOString()
         + '&branchId=' + formDataObj['branchId_s']
-        + '&userId=null';
+        + '&userId=-1';
 
       getTurnos(querry);
     }
@@ -138,7 +138,7 @@
             var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];  
             //console.log(form2.hora.options[0].text);    
             id = document.getElementById('hora').value;          
-            texto = "Esta apunto de reservar un turno el dia " + arrayfecha[2] +" de " + meses[arrayfecha[1] - 1]+" de " + arrayfecha[0] + " a las " + form2.hora.options[id].text;  
+            texto = "Esta apunto de reservar un turno el dia " + arrayfecha[2] +" de " + meses[arrayfecha[1] - 1]+" de " + arrayfecha[0];  
             if (confirm(texto) == true) {
               fetch('http://localhost:5000/api/reservas/confirmar/' + id, {
                 method: 'POST',

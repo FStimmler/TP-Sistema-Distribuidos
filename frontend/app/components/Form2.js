@@ -119,6 +119,7 @@ export function Form2(datos, queryP, datosSucu) {
                 //console.log("Inside form2 datos.element.fecha que cumple --> ", element.fecha)
                 let $option = document.createElement("option");
                 let fecha = new Date(element.fecha);
+                fecha.setHours(fecha.getHours()+3);
                 //$option.value = fecha.getHours();
                 $option.value = JSON.stringify(element);
                 //console.log("pp element --> ", element)

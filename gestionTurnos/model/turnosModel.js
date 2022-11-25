@@ -23,7 +23,7 @@ function findQ(params) {
             });
 
             let turnosQ = mapa.filter(turnoB => {
-                return (!params.has('fecha') || turnoB["fecha"].split('T')[0] == params.get('fecha').split('T')[0]) && (!params.has('branchId') || turnoB["branchId"] == params.get('branchId')) && (!params.has('userId') || turnoB["userId"] == params.get('userId') || (turnoB["userId"] == null && params.get('userId') == 'null'));
+                return (!params.has('fecha') || turnoB["fecha"].split('T')[0] == params.get('fecha').split('T')[0]) && (!params.has('branchId') || turnoB["branchId"] == params.get('branchId')) && (!params.has('userId') || turnoB["userId"] == params.get('userId') || (turnoB["userId"] == -1 && params.get('userId') == '-1'));
             }).map(turnoB => {
                 return turnoB;
             });
@@ -57,7 +57,7 @@ function modifyTurno(idReserva) {
             if (turnos.length < idReserva)
                 reject(new Sinturno())
             else {
-                turnos[idReserva]['userId'] = null
+                turnos[idReserva]['userId'] = -1
                 turnos[idReserva]['email'] = null
                 filemanagement.writeDataToFile('./data/turnos.json', turnos)
                 resolve(turnos[idReserva])
@@ -136,7 +136,7 @@ function solicitar(turno) {
 
                 console.log(turnoFecha);
 
-                if (turnoFecha[0]['userId'] === null) {
+                if (turnoFecha[0]['userId'] == -1) {
                     turnoFecha[0]['userId'] = turno['userId'];
                     turnoFecha[0]['status'] = 1;
                     const newTurno = turno
@@ -172,7 +172,7 @@ function pasoTiempo(id) {
             });
 
             if (turnoFecha[0]['status'] == 1) {
-                turnoFecha[0]['userId'] = null;
+                turnoFecha[0]['userId'] = -1;
                 turnoFecha[0]['status'] = 0;
              
              

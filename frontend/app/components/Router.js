@@ -157,7 +157,7 @@ const getLibresTurnos = () => {
                 url: fullUrl2,
                 cbSuccess: (data2) => {
                     const filteredData = data.filter(item => {
-                        return item.userId == null;
+                        return item.userId == -1;
                     })
                     document.getElementById("main").appendChild(Tabla(filteredData, data2));
                 },
@@ -233,6 +233,7 @@ function enviar(id, fecha, email) {
 
                 let fc = new Date(fecha);
                 let dia = fc.getDay();
+                fc.setHours(fc.getHours()+3)
                 let fechita = fc.toLocaleDateString();
                 let hora = fc.toLocaleTimeString();
                 let texto = `Esta a punto de reservar un turno el dia ${dias_semana[dia]} ${fechita} a las ${hora}`;

@@ -1,3 +1,5 @@
+import {IFrame} from "./IFrame.js"
+
 export function Form1(datos) {
     // Creamos una form
     const $form = document.createElement("form");
@@ -30,6 +32,9 @@ export function Form1(datos) {
     $label2.setAttribute("for", "branchId");
     $label2.innerHTML = "Sucursal";
 
+    const $div = IFrame();
+
+
     const $select = document.createElement("select");
     $select.setAttribute("name", "branchId");
     $select.id = "branchId";
@@ -50,6 +55,7 @@ export function Form1(datos) {
     }
 
     $panel2.appendChild($label2);
+    $panel2.appendChild($div);
     $panel2.appendChild($select);
 
     // ---------------------------------------------------------------------------
@@ -67,6 +73,5 @@ export function Form1(datos) {
 
 
 
-    return $form;   
-    
+    return $form;       
 }

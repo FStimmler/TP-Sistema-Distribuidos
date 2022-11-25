@@ -34,8 +34,12 @@ export function Tabla(reservas, sucursales) {
     reservas.forEach(element => {
         branchId = element["branchId"];
         
-        fecha =new Date(element["fecha"]).toLocaleString();
-        libre=element["userId"]==null?"si":"no";
+        
+        let fecha1 = new Date(element["fecha"])
+        fecha1.setHours(fecha1.getHours()+3)
+        fecha = fecha1.toLocaleString();
+        //fecha =new Date(element["fecha"]).toLocaleString();
+        libre=element["userId"]==-1?"si":"no";
         my_inner += `<tr><td>${diccionario[branchId]}</td><td>${fecha}</td><td>${libre}</td></tr>`
         
     });

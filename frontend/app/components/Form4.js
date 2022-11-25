@@ -68,6 +68,7 @@ export function Form4(datos) {
             //console.log("Inside form2 datos.element.fecha --> ", element.fecha)
             let $option = document.createElement("option");
             let fecha = new Date(element.fecha);
+            fecha.setHours(fecha.getHours()+3);
             //$option.value = fecha.getHours();
             $option.value = element.fecha;
             $option.text = fecha.toLocaleTimeString();

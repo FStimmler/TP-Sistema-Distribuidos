@@ -10,7 +10,7 @@ const headers = {
 }
 
 var now = new Date();
-var millisTill = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 20, 08, 00, 0) - now;            //horario de envio
+var millisTill = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 21, 27, 00, 0) - now;            //horario de envio
 if (millisTill < 0) {
     millisTill += 86400000;
 }
@@ -52,7 +52,7 @@ function buscaTurnos() {
             });
 
             let turnoFecha = mapa.filter(turnoB => {
-                if (turnoB["userId"] !== null) {
+                if (turnoB["userId"] != -1) {
                     var now = new Date();
                     difHorario = Date.parse(turnoB["fecha"]) - now + now.getTimezoneOffset() * 60000
                     if (difHorario <= 86400000 && difHorario > 0) {
